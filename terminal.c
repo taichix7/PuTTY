@@ -4253,10 +4253,12 @@ static void term_out(Terminal *term)
 				int x, y, len;
 				char buf[80], *p;
 			      case 1:
-				set_iconic(term->frontend, FALSE);
+				if (!term->no_remote_resize)
+				    set_iconic(term->frontend, FALSE);
 				break;
 			      case 2:
-				set_iconic(term->frontend, TRUE);
+				if (!term->no_remote_resize)
+				    set_iconic(term->frontend, TRUE);
 				break;
 			      case 3:
 				if (term->esc_nargs >= 3) {
@@ -4274,14 +4276,17 @@ static void term_out(Terminal *term)
 				break;
 			      case 5:
 				/* move to top */
-				set_zorder(term->frontend, TRUE);
+				if (!term->no_remote_resize)
+				    set_zorder(term->frontend, TRUE);
 				break;
 			      case 6:
 				/* move to bottom */
-				set_zorder(term->frontend, FALSE);
+				if (!term->no_remote_resize)
+				    set_zorder(term->frontend, FALSE);
 				break;
 			      case 7:
-				refresh_window(term->frontend);
+				if (!term->no_remote_resize)
+				    refresh_window(term->frontend);
 				break;
 			      case 8:
 				if (term->esc_nargs >= 3) {
@@ -4292,10 +4297,11 @@ static void term_out(Terminal *term)
 				}
 				break;
 			      case 9:
-				if (term->esc_nargs >= 2)
-				    set_zoomed(term->frontend,
-					       term->esc_args[1] ?
-					       TRUE : FALSE);
+				if (!term->no_remote_resize)
+				    if (term->esc_nargs >= 2)
+					set_zoomed(term->frontend,
+						   term->esc_args[1] ?
+						   TRUE : FALSE);
 				break;
 			      case 11:
 				if (term->ldisc)
