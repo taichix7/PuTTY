@@ -536,6 +536,10 @@ GLOBAL int restricted_acl;
 #if _MSC_VER < 1400
 typedef PVOID DLL_DIRECTORY_COOKIE;
 #endif
+#ifndef __MINGW32__
+int strcasecmp(char const* s1, char const* s2);
+int strncasecmp(char const* s1, char const* s2, size_t n);
+#endif
 
 /*
  * Exports from sizetip.c.
