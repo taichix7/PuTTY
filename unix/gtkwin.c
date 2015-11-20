@@ -822,8 +822,9 @@ gint key_event(GtkWidget *widget, GdkEventKey *event, gpointer data)
 	 * special to ldisc. */
 	if (event->keyval == GDK_Return) {
 	    output[1] = '\015';
+	    output[2] = '\012';
 	    use_ucsoutput = FALSE;
-	    end = 2;
+	    end = 2 + (inst->term->cr_lf_return != 0);
 	    special = TRUE;
 	}
 
