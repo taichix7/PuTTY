@@ -1150,16 +1150,18 @@ gint key_event(GtkWidget *widget, GdkEventKey *event, gpointer data)
 	 * if we haven't already done them due to app keypad mode.)
 	 * 
 	 * Here we also process un-numlocked un-appkeypadded KP5,
-	 * which sends ESC [ G.
+	 * which sends ESC [ G, except in SCO mode where it's CSI E.
 	 */
 	{
 	    int xkey = 0;
+	    int funky_type = conf_get_int(inst->conf, CONF_funky_type);
 	    switch (event->keyval) {
 	      case GDK_Up: case GDK_KP_Up: xkey = 'A'; break;
 	      case GDK_Down: case GDK_KP_Down: xkey = 'B'; break;
 	      case GDK_Right: case GDK_KP_Right: xkey = 'C'; break;
 	      case GDK_Left: case GDK_KP_Left: xkey = 'D'; break;
-	      case GDK_Begin: case GDK_KP_Begin: xkey = 'G'; break;
+	      case GDK_Begin: case GDK_KP_Begin:
+		xkey = (funky_type == FUNKY_SCO)?'E':'G'; break;
 	    }
 	    if (xkey) {
 		end = 1 + format_arrow_key(output+1, inst->term, xkey,
