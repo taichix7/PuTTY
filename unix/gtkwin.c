@@ -872,6 +872,15 @@ gint key_event(GtkWidget *widget, GdkEventKey *event, gpointer data)
 	    end = 2;
 	    special = TRUE;
 	}
+	/* For Ctrl Backspace, do opposite of what is configured. */
+	if (event->keyval == GDK_BackSpace &&
+	    (event->state & GDK_CONTROL_MASK)) {
+	    output[1] = conf_get_int(inst->conf, CONF_bksp_is_delete) ?
+		'\x08' : '\x7F';
+	    use_ucsoutput = FALSE;
+	    end = 2;
+	    special = TRUE;
+	}
 
 	/* Shift-Tab is ESC [ Z */
 	if (event->keyval == GDK_ISO_Left_Tab ||
