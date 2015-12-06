@@ -134,6 +134,7 @@ struct draw_ctx {
 static int send_raw_mouse;
 
 static char *app_name = "pterm";
+static GdkNativeWindow embed = 0;
 
 static void start_backend(struct gui_data *inst);
 static void exit_callback(void *vinst);
@@ -2694,6 +2695,7 @@ static void help(FILE *fp) {
 "  -nethack                  Map numeric keypad to hjklyubn direction keys\n"
 "  -xrm RESOURCE-STRING      Set an X resource\n"
 "  -e COMMAND [ARGS...]      Execute command (consumes all remaining args)\n"
+"  -xembed <xid>             Embed this window into the container <xid>\n"
 	 ) < 0 || fflush(fp) < 0) {
 	perror("output error");
 	exit(1);
@@ -2911,6 +2913,11 @@ int do_cmdline(int argc, char **argv, int do_everything, int *allow_launch,
 	} else if (!strcmp(p, "-xrm")) {
 	    EXPECTS_ARG;
 	    provide_xrm_string(val);
+
+	} else if (!strcmp(p, "-xembed")) {
+	    EXPECTS_ARG;
+	    embed = atoi(val);
+	    printf("embedding in xid=%d\n", embed);
 
 	} else if(!strcmp(p, "-help") || !strcmp(p, "--help")) {
 	    help(stdout);
@@ -3765,7 +3772,12 @@ int pt_main(int argc, char **argv)
     }
     init_cutbuffers();
 
-    inst->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    if (embed) {
+	inst->window = gtk_plug_new(embed);
+    } else {
+	inst->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    }
+
     {
         const char *winclass = conf_get_str(inst->conf, CONF_winclass);
         if (*winclass)
