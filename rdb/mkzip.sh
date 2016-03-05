@@ -22,7 +22,8 @@ find * \( -name rdb -prune -false \) -o -type f ! \(  \
     -o -name \*.url \
     -o -name \*.dsp \
     -o -name \*.dsw \
-\) | sort | zip -@ -l -q putty-src.zip
+    -o -name \*.cur \
+\) | sort | zip -@ -X -q -l putty-src.zip
 
 # And the binary files.
 find * \
@@ -30,4 +31,5 @@ find * \
     -o -name \*.iss \
     -o -name \*.url \
     -o -name \*.dsp \
-| zip -@ -q putty-src.zip
+    -o -name \*.cur \
+| zip -@ -X -q putty-src.zip
